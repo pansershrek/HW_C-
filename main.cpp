@@ -106,6 +106,36 @@ int main(void)
             ans[ans_len - 1]=numb;
         }
         if (ch == '{')
+        {
+            ans_len++;
+            if (! realloc(ans,ans_len * sizeof(struct vect)))
+            {
+                big_error = 1;
+                break;
+            }
+            ans[ans_len - 1].flag = 0;
+            char in_buf = '\0';
+            while (!scanf("%c",&ch) && ch != '}')
+            {
+                if (ch==' ' || ch==',')
+                    continue;
+                else
+                    if (ch>='0' && ch<='9')
+                    {
+                        long long kkoef=(long long)(ch)- (long long)('0');
+                        while (!scanf("%c",&ch) && ch>='0' && ch<='9')
+                        {
+                            kkoef
+                        }
+                    }
+                else
+                    {
+                        big_error = 1;
+                        break;
+                    }
+            }
+
+        }
     }
 
     return 0;
