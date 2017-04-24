@@ -65,7 +65,8 @@ int main(void)
     //while (!scanf("%c",&ch))
     while (buff=='\0' ? !scanf("%c",&ch): ch=buff)
     {
-        if (buff != '\0')
+        if (big_error == 1)
+            break;
             buff = '\0';
         if (ch == ' ')
             continue;
@@ -114,26 +115,52 @@ int main(void)
                 break;
             }
             ans[ans_len - 1].flag = 0;
-            char in_buf = '\0';
-            while (!scanf("%c",&ch) && ch != '}')
+            char f_buf = '\0';
+            size_t mode = 0;
+            while (f_buf=='\0'?!scanf("%c",&ch) && ch != '}' : ch==f_buf)
             {
-                if (ch==' ' || ch==',')
+                f_buf='\0';
+                if (ch == ' ' || ch == ',')
+                {
+                    mode = 0;
                     continue;
+                }
                 else
-                    if (ch>='0' && ch<='9')
+                    if (ch >= '0' && ch <= '9')
                     {
+                        if (mode == 1)
+                        {
+                            big_error = 1;
+                            break;
+                        }
+                        else
+                            mode = 1;
                         long long kkoef=(long long)(ch)- (long long)('0');
+
                         while (!scanf("%c",&ch) && ch>='0' && ch<='9')
                         {
-                            kkoef
+                            kkoef *= 10;
+                            kkoef += (long long)(ch)- (long long)('0');
                         }
+                        f_buf = ch;
+
+                        ans[ans_len - 1].len++;
+                        if (!realloc(ans[ans_len - 1].koef,ans[ans_len - 1].len* sizeof(long long)))
+                        {
+                            big_error = 1;
+                            break;
+                        }
+                        ans[ans_len -1].koef[ans[ans_len -1].len -1] = kkoef;
                     }
                 else
                     {
                         big_error = 1;
                         break;
                     }
+                if (big_error = 1)
+                    break;
             }
+
 
         }
     }
