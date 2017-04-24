@@ -8,6 +8,8 @@ struct vect{
 typedef struct vect vec;
 size_t mul(vec *first,vec numb)
 {
+    if (!first)
+        return 0;
     if (numb.flag != 1)
         return 0;
     else
@@ -27,6 +29,8 @@ size_t mul(vec *first,vec numb)
 }
 size_t add(vec *first,vec *second,char sign)
 {
+    if (!first || !second)
+        return 0;
     if (first->len < 2 || second->len <2 || (sign != '+' && sign != '-'))
     {
         return 0;
@@ -81,13 +85,89 @@ int main(void)
             }
             steck[steck_len - 1]=ch;
         }
+/////////////////kekkekkekeke///////////////////////////////////////////////////////////////////
         else
             if (ch==')')
             {
+                size_t ff = 0;
+                while (steck_len > 0  && steck[steck_len - 1] != ')')
+                {
+                    if (ans_len <2)
+                    {
+                        big_error = 1;
+                        break;
+                    }
+                    if (steck[steck_len - 1] == '+' || steck[steck_len - 1] == '-')
+                    {
+                        if (ans[ans_len - 2].flag == 1 || ans[ans_len -1].flag ==1 )
+                        {
+                            big_error = 1;
+                            break;
+                        }
+                        if (!add(ans+ans_len - 2,ans+ans_len - 1,steck[steck_len - 1]))
+                        {
+                            big_error = 1;
+                            break;
+                        }
+                        free(ans+ans_len-1);
+                        ans_len--;
+                    }
+                    else
+                        if (steck[steck_len - 1] == '*')
+                        {
+                            if (ans[ans_len -2].flag + ans[ans_len -1].flag != 1)
+                            {
+                                big_error = 1;
+                                break;
+                            }
+                            if (ans[ans_len -2].flag == 1)
+                            {
+                                ans[ans_len -1].flag = 1;
+                                ans[ans_len -2].flag = 0;
+                                size_t qbuf = ans[ans_len -1].len;
+                                ans[ans_len - 1].len = ans[ans_len - 2].len;
+                                ans[ans_len - 2].len = qbuf;
+                                long long llbuf = ans[ans_len -1].num_val;
+                                ans[ans_len - 1].num_val = ans[ans_len - 2].num_val;
+                                ans[ans_len - 2].num_val = llbuf;
+                                long long *ptrbuff = ans[ans_len -1].koef;
+                                ans[ans_len - 1].koef = ans[ans_len - 2].koef;
+                                ans[ans_len - 2].koef = ptrbuff;
+                            }
+                            if (!mul(ans + ans_len - 2,ans[ans_len - 1]))
+                            {
+                                big_error = 1;
+                                break;
+                            }
+                            free(ans + ans_len - 1);
+                            ans_len--;
+                        }
+                    else
+                        {
+                            big_error = 1;
+                            break;
+                        }
 
+                }
+                if (big_error)
+                    break;
+                if (steck_len > 0 && steck[steck_len -1] == '(' )
+                {
+                    if (!realloc(steck,(steck_len - 2) * sizeof(char)))
+                    {
+                        big_error = 1;
+                        break;
+                    }
+                }
+                else
+                {
+                    big_error = 1;
+                    break;
+                }
             }
         else
-        if (ch >= '0' && ch <= '9')
+////////////////////////////////////////////////////////////////////////////////////
+            if (ch >= '0' && ch <= '9')
         {
             vec numb;
             numb.flag = 1;
@@ -106,6 +186,7 @@ int main(void)
             }
             ans[ans_len - 1]=numb;
         }
+///////////////////////////////////////////////////////////////////////////////////
         if (ch == '{')
         {
             ans_len++;
@@ -160,8 +241,6 @@ int main(void)
                 if (big_error = 1)
                     break;
             }
-
-
         }
     }
 
