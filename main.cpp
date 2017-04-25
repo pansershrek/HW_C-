@@ -38,9 +38,9 @@ size_t add(vec *first,vec *second,char sign)
     else
     {
         size_t maxlen = first->len > second->len ? first->len : second->len;
-        if ( !realloc(first->koef , maxlen * sizeof(long long)))
+        if ( !(first ->koef = (long long*)realloc(first->koef , maxlen * sizeof(long long))))
             return 0;
-        if ( !realloc(second->koef, maxlen * sizeof(long long)))
+        if ( !(second->koef = (long long*)realloc(second->koef, maxlen * sizeof(long long))))
             return 0;
         for (size_t i = 0;i < maxlen; i++)
         {
@@ -78,7 +78,7 @@ int main(void)
         if (ch == '(' || ch == '-' || ch == '+' || ch == '*')
         {
             steck_len++;
-            if (! steck = (char*)realloc(steck,steck_len * sizeof(char)))
+            if (! (steck = (char*)realloc(steck,steck_len * sizeof(char))))
             {
                 big_error = 1;
                 break;
@@ -153,7 +153,7 @@ int main(void)
                     break;
                 if (steck_len > 0 && steck[steck_len -1] == '(' )
                 {
-                    if (!realloc(steck,(steck_len - 2) * sizeof(char)))
+                    if (!(steck = (char * )realloc(steck,(steck_len - 2) * sizeof(char))))
                     {
                         big_error = 1;
                         break;
@@ -179,7 +179,7 @@ int main(void)
             }
             buff = ch;
             ans_len++;
-            if (! ans =(struct vect *)realloc(ans,ans_len * sizeof(struct vect)))
+            if (! (ans =(struct vect *)realloc(ans,ans_len * sizeof(struct vect))))
             {
                 big_error = 1;
                 break;
@@ -190,7 +190,7 @@ int main(void)
         if (ch == '{')
         {
             ans_len++;
-            if (! ans =(struct vect *)realloc(ans,ans_len * sizeof(struct vect)))
+            if (! (ans =(struct vect *)realloc(ans,ans_len * sizeof(struct vect))))
             {
                 big_error = 1;
                 break;
@@ -226,7 +226,7 @@ int main(void)
                         f_buf = ch;
 
                         ans[ans_len - 1].len++;
-                        if (!realloc(ans[ans_len - 1].koef,ans[ans_len - 1].len* sizeof(long long)))
+                        if (! (ans[ans_len-1].koef = (long long *)realloc(ans[ans_len - 1].koef,ans[ans_len - 1].len* sizeof(long long))))
                         {
                             big_error = 1;
                             break;
