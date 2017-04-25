@@ -67,7 +67,7 @@ int main(void)
     size_t big_error = 0;
     char buff = '\0';
     //while (!scanf("%c",&ch))
-    while (buff=='\0' ? scanf("%c",&ch) == 1: ch=buff)
+    while (buff=='\0' ? (scanf("%c",&ch) == 1)  && (ch!='\n') : ch=buff)
     {
         if (big_error == 1)
             break;
@@ -78,7 +78,7 @@ int main(void)
         if (ch == '(' || ch == '-' || ch == '+' || ch == '*')
         {
             steck_len++;
-            if (! realloc(steck,steck_len * sizeof(char)))
+            if (! steck = (char*)realloc(steck,steck_len * sizeof(char)))
             {
                 big_error = 1;
                 break;
@@ -179,7 +179,7 @@ int main(void)
             }
             buff = ch;
             ans_len++;
-            if (! realloc(ans,ans_len * sizeof(struct vect)))
+            if (! ans =(struct vect *)realloc(ans,ans_len * sizeof(struct vect)))
             {
                 big_error = 1;
                 break;
@@ -190,7 +190,7 @@ int main(void)
         if (ch == '{')
         {
             ans_len++;
-            if (! realloc(ans,ans_len * sizeof(struct vect)))
+            if (! ans =(struct vect *)realloc(ans,ans_len * sizeof(struct vect)))
             {
                 big_error = 1;
                 break;
