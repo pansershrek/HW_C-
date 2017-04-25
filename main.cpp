@@ -67,7 +67,7 @@ int main(void)
     size_t big_error = 0;
     char buff = '\0';
     //while (!scanf("%c",&ch))
-    while (buff=='\0' ? !scanf("%c",&ch): ch=buff)
+    while (buff=='\0' ? scanf("%c",&ch): ch=buff)
     {
         if (big_error == 1)
             break;
@@ -243,6 +243,16 @@ int main(void)
             }
         }
     }
-
+    if (big_error || ans_len!=1 || ans ==NULL || ans[0].flag!=0)
+    {
+        printf("[error]");
+        return 0;
+    }
+    printf("{");
+    for (int i = 0;i < ans[0].len - 1;i++)
+    {
+        printf("%lld,",ans[0].koef[i]);
+    }
+    printf("%lld}",ans[0].koef[ans[0].len-1]);
     return 0;
 }
