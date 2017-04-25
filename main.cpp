@@ -67,7 +67,7 @@ int main(void)
     size_t big_error = 0;
     char buff = '\0';
     //while (!scanf("%c",&ch))
-    while (buff=='\0' ? scanf("%c",&ch): ch=buff)
+    while (buff=='\0' ? scanf("%c",&ch) == 1: ch=buff)
     {
         if (big_error == 1)
             break;
@@ -172,7 +172,7 @@ int main(void)
             vec numb;
             numb.flag = 1;
             numb.num_val = (long long)(ch) - (long long)('0');
-            while (!scanf("%c",&ch) && ch>='0' && ch<='9')
+            while (scanf("%c",&ch) == 1 && ch>='0' && ch<='9')
             {
                 numb.num_val *= 10;
                 numb.num_val += (long long)(ch) - (long long)('0');
@@ -198,7 +198,7 @@ int main(void)
             ans[ans_len - 1].flag = 0;
             char f_buf = '\0';
             size_t mode = 0;
-            while (f_buf=='\0'?!scanf("%c",&ch) && ch != '}' : ch==f_buf)
+            while (f_buf=='\0' ? scanf("%c",&ch) == 1 && ch != '}' : ch==f_buf)
             {
                 f_buf='\0';
                 if (ch == ' ' || ch == ',')
@@ -218,7 +218,7 @@ int main(void)
                             mode = 1;
                         long long kkoef=(long long)(ch)- (long long)('0');
 
-                        while (!scanf("%c",&ch) && ch>='0' && ch<='9')
+                        while (scanf("%c",&ch) == 1 && ch>='0' && ch<='9')
                         {
                             kkoef *= 10;
                             kkoef += (long long)(ch)- (long long)('0');
@@ -243,7 +243,7 @@ int main(void)
             }
         }
     }
-    if (big_error || ans_len!=1 || ans ==NULL || ans[0].flag!=0)
+    if (big_error || ans_len!=1 || ans == NULL || ans[0].flag!=0)
     {
         printf("[error]");
         return 0;
