@@ -51,9 +51,10 @@ size_t add(vec *first,vec *second,char sign)
                     first->koef[i] += second->koef[i];
                 else if (sign == '-')
                     first->koef[i] -= second->koef[i];
-                free(second->koef);
+
             }
         }
+        free(second->koef);
         return 1;
     }
 }
@@ -66,6 +67,7 @@ int main(void)
     size_t steck_len = 0;
     size_t big_error = 0;
     char buff = '\0';
+
     //while (!scanf("%c",&ch))
     while (buff=='\0' ? (scanf("%c",&ch) == 1)  && (ch!='\n') : ch=buff)
     {
@@ -90,7 +92,7 @@ int main(void)
             if (ch==')')
             {
                 size_t ff = 0;
-                while (steck_len > 0  && steck[steck_len - 1] != ')')
+                while (steck_len > 0  && steck[steck_len - 1] != '(')
                 {
                     if (ans_len <2)
                     {
@@ -109,7 +111,8 @@ int main(void)
                             big_error = 1;
                             break;
                         }
-                        free(ans+ans_len-1);
+                        //free(ans+ans_len-1);
+                        steck_len--;
                         ans_len--;
                     }
                     else
@@ -139,8 +142,9 @@ int main(void)
                                 big_error = 1;
                                 break;
                             }
-                            free(ans + ans_len - 1);
+                            //free(ans + ans_len - 1);
                             ans_len--;
+                            steck_len--;
                         }
                     else
                         {
@@ -149,9 +153,16 @@ int main(void)
                         }
 
                 }
+                if (steck_len > 0  && steck[steck_len - 1] == '(')
+                { steck_len--;continue;}
+                else
+                {
+                    big_error = 1;
+                    break;
+                }
                 if (big_error)
                     break;
-                if (steck_len > 0 && steck[steck_len -1] == '(' )
+                /*if (steck_len > 0 && steck[steck_len -1] == '(' )
                 {
                     if (!(steck = (char * )realloc(steck,(steck_len - 2) * sizeof(char))))
                     {
@@ -163,8 +174,8 @@ int main(void)
                 {
                     big_error = 1;
                     break;
-                }
-            }
+                }*/
+            } //end of loop
         else
 ////////////////////////////////////////////////////////////////////////////////////
             if (ch >= '0' && ch <= '9')
@@ -186,6 +197,7 @@ int main(void)
             }
             ans[ans_len - 1]=numb;
         }
+        else
 ///////////////////////////////////////////////////////////////////////////////////
         if (ch == '{')
         {
@@ -201,6 +213,8 @@ int main(void)
             while (f_buf=='\0' ? scanf("%c",&ch) == 1 && ch != '}' : ch==f_buf)
             {
                 f_buf='\0';
+                if (ch == '}')
+                    break;
                 if (ch == ' ' || ch == ',')
                 {
                     mode = 0;
@@ -238,11 +252,77 @@ int main(void)
                         big_error = 1;
                         break;
                     }
-                if (big_error = 1)
+                if (big_error == 1)
                     break;
             }
         }
     }
+    //begin the end of calc
+    //lolooolooooooolooooooooooloooooooooooooooooooooool
+    size_t ff = 0;
+    while (steck_len > 0 )
+    {
+        if (ans_len <2)
+        {
+            big_error = 1;
+            break;
+        }
+        if (steck[steck_len - 1] == '+' || steck[steck_len - 1] == '-')
+        {
+            if (ans[ans_len - 2].flag == 1 || ans[ans_len -1].flag ==1 )
+            {
+                big_error = 1;
+                break;
+            }
+            if (!add(ans+ans_len - 2,ans+ans_len - 1,steck[steck_len - 1]))
+            {
+                big_error = 1;
+                break;
+            }
+            //free(ans+ans_len-1);
+
+            ans_len--;
+            steck_len--;
+        }
+        else
+        if (steck[steck_len - 1] == '*')
+        {
+            if (ans[ans_len -2].flag + ans[ans_len -1].flag != 1)
+            {
+                big_error = 1;
+                break;
+            }
+            if (ans[ans_len -2].flag == 1)
+            {
+                ans[ans_len -1].flag = 1;
+                ans[ans_len -2].flag = 0;
+                size_t qbuf = ans[ans_len -1].len;
+                ans[ans_len - 1].len = ans[ans_len - 2].len;
+                ans[ans_len - 2].len = qbuf;
+                long long llbuf = ans[ans_len -1].num_val;
+                ans[ans_len - 1].num_val = ans[ans_len - 2].num_val;
+                ans[ans_len - 2].num_val = llbuf;
+                long long *ptrbuff = ans[ans_len -1].koef;
+                ans[ans_len - 1].koef = ans[ans_len - 2].koef;
+                ans[ans_len - 2].koef = ptrbuff;
+            }
+            if (!mul(ans + ans_len - 2,ans[ans_len - 1]))
+            {
+                big_error = 1;
+                break;
+            }
+            //free(ans + ans_len - 1);
+            ans_len--;
+            steck_len--;
+        }
+        else
+        {
+            big_error = 1;
+            break;
+        }
+
+    }
+
     if (big_error || ans_len!=1 || ans == NULL || ans[0].flag!=0)
     {
         printf("[error]");
@@ -254,5 +334,8 @@ int main(void)
         printf("%lld,",ans[0].koef[i]);
     }
     printf("%lld}",ans[0].koef[ans[0].len-1]);
+
+
+
     return 0;
 }
