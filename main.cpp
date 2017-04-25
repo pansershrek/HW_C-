@@ -4,13 +4,14 @@ struct vect{
     size_t len,flag;
     long long *koef;
     long long num_val;
+    char oper;
 };
 typedef struct vect vec;
 size_t mul(vec *first,vec numb)
 {
     if (!first)
         return 0;
-    if (numb.flag != 1)
+    if (numb.flag != 1 || first->flag!=0)
         return 0;
     else
         if (first->len < 2)
@@ -29,7 +30,7 @@ size_t mul(vec *first,vec numb)
 }
 size_t add(vec *first,vec *second,char sign)
 {
-    if (!first || !second)
+    if (!first || !second || first->flag!=0 || second->flag!=0)
         return 0;
     if (first->len < 2 || second->len <2 || (sign != '+' && sign != '-'))
     {
