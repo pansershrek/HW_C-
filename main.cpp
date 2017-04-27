@@ -78,10 +78,11 @@ int main(void)
     size_t ans_len = 0;
     size_t steck_len = 0;
     size_t big_error = 0;
+    size_t max_len_steck = 0;
     char buff = '\0';
 
     //while (!scanf("%c",&ch))
-    while (buff=='\0' ? (scanf("%c",&ch) == 1)  && (ch!='\n') : ch=buff)
+    while (buff=='\0' ? (scanf("%c",&ch) == 1)  && (ch!='\n') : (ch=buff))
     {
         if (big_error == 1)
             break;
@@ -104,6 +105,7 @@ int main(void)
             if ( ch == '-' || ch == '+')
             {
                 vec cchar;
+                cchar.koef = NULL;
                 while (steck_len > 0 && steck[steck_len -1]!='(')
                 {
                     cchar.flag = 2;
@@ -130,6 +132,7 @@ int main(void)
         else
             if (ch == ')') {
                 vec cchar;
+                cchar.koef = NULL;
                 while (steck_len > 0 && steck[steck_len - 1] != '(')
                 {
                     cchar.flag = 2;
@@ -224,7 +227,7 @@ int main(void)
                 }
                 if (big_error)
                     break;
-                /*if (steck_len > 0 && steck[steck_len -1] == '(' )
+                if (steck_len > 0 && steck[steck_len -1] == '(' )
                 {
                     if (!(steck = (char * )realloc(steck,(steck_len - 2) * sizeof(char))))
                     {
@@ -243,6 +246,7 @@ int main(void)
             if (ch >= '0' && ch <= '9')
         {
             vec numb;
+            numb.koef = NULL;
             numb.flag = 1;
             numb.num_val = (long long)(ch) - (long long)('0');
             while (scanf("%c",&ch) == 1 && ch>='0' && ch<='9')
@@ -390,6 +394,7 @@ int main(void)
         return 0;
     }
     vec cchar;
+    cchar.koef = NULL;
     while (steck_len > 0)
     {
         cchar.flag = 2;
@@ -404,9 +409,9 @@ int main(void)
         steck_len--;
     }
     free(steck);
-     // for (size_t i = 0; i < ans_len;i++)
-     //  printf("%d ",ans[i].flag);
-     //int test;
+      //for (size_t i = 0; i < ans_len;i++)
+    //      printf("%d ",ans[i].flag);
+    //  int test;
      //scanf("%d ",&test);
 
     for (size_t i = 0; i < ans_len;i++)
@@ -414,12 +419,19 @@ int main(void)
         if (ans[i].flag < 2)
         {
             ans_steck_len++;
+            if (max_len_steck < ans_steck_len)
+                max_len_steck = ans_steck_len;
             if (!(ans_steck = (struct vect *) realloc(ans_steck,ans_steck_len * sizeof(struct vect))))
             {
                 big_error = 1;
                 break;
             }
-            ans_steck[ans_steck_len - 1] = ans[i];
+            //ans_steck[ans_steck_len - 1] = ans[i];
+            ans_steck[ans_steck_len - 1].koef = ans[i].koef;
+            ans_steck[ans_steck_len - 1].flag = ans[i].flag;
+            ans_steck[ans_steck_len - 1].num_val = ans[i].num_val;
+            ans_steck[ans_steck_len - 1].oper = ans[i].oper;
+            ans_steck[ans_steck_len - 1].len = ans[i].len;
         }
         else
         {
@@ -485,18 +497,48 @@ int main(void)
             }
         }
     }
-
+    vec aans;
+    aans.len = ans_steck[0].len;
+    aans.oper = ans_steck[0].oper;
+    aans.num_val = ans_steck[0].num_val;
+    aans.flag = ans_steck[0].flag;
+    aans.koef = ans_steck[0].koef;
+    size_t fff = 0;
     if (big_error || ans_steck_len!=1 || ans_steck == NULL || ans_steck[0].flag!=0)
     {
         printf("[error]");
-        return 0;
+        fff = 1;
     }
-    printf("{");
-    for (int i = 0;i < ans_steck[0].len - 1;i++)
+
+  /*  for (size_t i = 0;i < ans_steck_len;i++)
     {
-        printf("%lld,",ans_steck[0].koef[i]);
+        if ( ((ans_steck+i) != NULL) && (ans_steck[i].koef != NULL))
+        {
+            long long *del = ans_steck[i].koef;
+            free(del);
+        }
     }
-    printf("%lld}",ans_steck[0].koef[ans_steck[0].len-1]);
+    for (size_t i = 0;i < ans_len;i++)
+    {
+        if ( ((ans + i) != NULL) && (ans[i].koef != NULL) )
+        {
+            long long *del = ans[i].koef;
+            free(del);
+        }
+
+    }*/
+    //ans_steck = (struct vect *)realloc(ans_steck,0);
+    //ans = (struct vect*) realloc(ans,0);
+    free(ans);
+    free(ans_steck);
+    if (fff)
+        return 0;
+    printf("{");
+    for (int i = 0;i < aans.len - 1;i++)
+    {
+        printf("%lld,",aans.koef[i]);
+    }
+    printf("%lld}",aans.koef[aans.len-1]);
 
 
 
