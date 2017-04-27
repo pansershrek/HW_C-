@@ -48,6 +48,8 @@ size_t add(vec *first,vec *second,char sign)
     else
     {
         size_t maxlen = first->len > second->len ? first->len : second->len;
+        first->len = maxlen;
+        second->len = maxlen;
         if ( !(first ->koef = (long long*)realloc(first->koef , maxlen * sizeof(long long))))
             return 0;
         if ( !(second->koef = (long long*)realloc(second->koef, maxlen * sizeof(long long))))
@@ -64,7 +66,7 @@ size_t add(vec *first,vec *second,char sign)
 
             }
         }
-        free(second->koef);
+       // free(second->koef);
         return 1;
     }
 }
@@ -87,6 +89,9 @@ int main(void)
         if (big_error == 1)
             break;
             buff = '\0';
+        if (ch == '\n')
+            break;
+        else
         if (ch == ' ')
             continue;
         else
@@ -274,6 +279,8 @@ int main(void)
                 break;
             }
             ans[ans_len - 1].flag = 0;
+            ans[ans_len - 1].len = 0;
+            ans[ans_len - 1].koef = NULL;
             char f_buf = '\0';
             size_t mode = 0;
             while (f_buf=='\0' ? scanf("%c",&ch) == 1 && ch != '}' : ch==f_buf)
@@ -409,9 +416,9 @@ int main(void)
         steck_len--;
     }
     free(steck);
-      //for (size_t i = 0; i < ans_len;i++)
-    //      printf("%d ",ans[i].flag);
-    //  int test;
+     // for (size_t i = 0; i < ans_len;i++)
+     //   printf("%d ",ans[i].flag);
+     // int test;
      //scanf("%d ",&test);
 
     for (size_t i = 0; i < ans_len;i++)
@@ -452,6 +459,7 @@ int main(void)
                     big_error = 1;
                     break;
                 }
+               //free(ans_steck[ans_steck_len - 1].koef);
                 ans_steck_len--;
             }
             else
@@ -480,6 +488,7 @@ int main(void)
                         break;
                     }
                     //free(ans + ans_len - 1);
+                    //free(ans_steck[ans_steck_len - 1].koef);
                     ans_steck_len--;
                     //steck_len--;
                 }
