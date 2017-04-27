@@ -78,7 +78,7 @@ int main(void)
         if (ch == ' ')
             continue;
         else
-        if (ch == '(' || ch == '-' || ch == '+' || ch == '*')
+        if (ch == '(' || ch == '-' || ch == '+' )
         {
             steck_len++;
             if (! (steck = (char*)realloc(steck,steck_len * sizeof(char))))
@@ -88,9 +88,62 @@ int main(void)
             }
             steck[steck_len - 1]=ch;
         }
+            if (ch == '*')
+            {
+                vec cchar;
+                while (steck_len > 0 && steck[steck_len -1]!='(')
+                {
+                    cchar.flag = 2;
+                    cchar.oper = steck[steck_len - 1];
+                    ans_len++;
+                    if (! (ans =(struct vect *)realloc(ans,ans_len * sizeof(struct vect))))
+                    {
+                        big_error = 1;
+                        break;
+                    }
+                    ans[ans_len - 1]=cchar;
+                    steck_len--;
+                }
+                if (steck_len <= 0 || steck[steck_len - 1] != '(')
+                {
+                    big_error = 1;
+                    break;
+                }
+                steck_len++;
+                if (! (steck = (char*)realloc(steck,steck_len * sizeof(char))))
+                {
+                    big_error = 1;
+                    break;
+                }
+                steck[steck_len - 1] = ch;
+
+            }
 /////////////////kekkekkekeke///////////////////////////////////////////////////////////////////
         else
-            if (ch==')')
+            if (ch == ')') {
+                vec cchar;
+                while (steck_len > 0 && steck[steck_len - 1] != '(')
+                {
+                    cchar.flag = 2;
+                    cchar.oper = steck[steck_len - 1];
+                    ans_len++;
+                    if (! (ans =(struct vect *)realloc(ans,ans_len * sizeof(struct vect))))
+                    {
+                        big_error = 1;
+                        break;
+                    }
+                    ans[ans_len - 1]=cchar;
+                    steck_len--;
+                }
+                if (steck_len <= 0 || steck[steck_len - 1] != '(')
+                {
+                    big_error = 1;
+                    break;
+                }
+                steck_len--;
+
+            }
+       /*     if (ch==')')
             {
                 size_t ff = 0;
                 while (steck_len > 0  && steck[steck_len - 1] != '(')
@@ -175,9 +228,9 @@ int main(void)
                 {
                     big_error = 1;
                     break;
-                }*/
+                }
             } //end of loop
-        else
+        */ else
 ////////////////////////////////////////////////////////////////////////////////////
             if (ch >= '0' && ch <= '9')
         {
@@ -260,7 +313,11 @@ int main(void)
     }
     //begin the end of calc
     //lolooolooooooolooooooooooloooooooooooooooooooooool
-    size_t ff = 0;
+    while (steck_len > 0)
+    {
+        if ()
+    }
+   /* size_t ff = 0;
     while (steck_len > 0 )
     {
         if (ans_len <2)
@@ -322,7 +379,7 @@ int main(void)
             break;
         }
 
-    }
+    }*/
 
     if (big_error || ans_len!=1 || ans == NULL || ans[0].flag!=0)
     {
