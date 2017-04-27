@@ -64,6 +64,8 @@ int main(void)
     char ch = '\0';
     char *steck = NULL;
     vec *ans = NULL;
+    vec *ans_steck = NULL;
+    size_t ans_steck_len = 0;
     size_t ans_len = 0;
     size_t steck_len = 0;
     size_t big_error = 0;
@@ -88,6 +90,7 @@ int main(void)
             }
             steck[steck_len - 1]=ch;
         }
+        else
             if (ch == '*')
             {
                 vec cchar;
@@ -103,11 +106,6 @@ int main(void)
                     }
                     ans[ans_len - 1]=cchar;
                     steck_len--;
-                }
-                if (steck_len <= 0 || steck[steck_len - 1] != '(')
-                {
-                    big_error = 1;
-                    break;
                 }
                 steck_len++;
                 if (! (steck = (char*)realloc(steck,steck_len * sizeof(char))))
@@ -313,10 +311,6 @@ int main(void)
     }
     //begin the end of calc
     //lolooolooooooolooooooooooloooooooooooooooooooooool
-    while (steck_len > 0)
-    {
-        if ()
-    }
    /* size_t ff = 0;
     while (steck_len > 0 )
     {
@@ -380,6 +374,64 @@ int main(void)
         }
 
     }*/
+    if (big_error )
+    {
+        printf("[error]");
+        return 0;
+    }
+    vec cchar;
+    while (steck_len > 0)
+    {
+        cchar.flag = 2;
+        cchar.oper = steck[steck_len - 1];
+        ans_len++;
+        if (! (ans =(struct vect *)realloc(ans,ans_len * sizeof(struct vect))))
+        {
+            big_error = 1;
+            break;
+        }
+        ans[ans_len - 1]=cchar;
+        steck_len--;
+    }
+    free(steck);
+    for (size_t i = 0; i < ans_len;i++)
+    {
+        if (ans[i].flag < 2)
+        {
+            ans_steck_len++;
+            if (!(ans_steck = (struct vect *) realloc(ans_steck,ans_steck_len * sizeof(struct vect))))
+            {
+                big_error = 1;
+                break;
+            }
+            ans_steck[ans_steck_len - 1] = ans[i];
+        }
+        else
+        {
+            if (ans_steck_len <2)
+            {
+                big_error = 1;
+                break;
+            }
+            if (ans_steck[ans_steck_len - 1].oper == '+' || ans_steck[ans_steck_len - 1].oper == '-')
+            {
+                if (ans[ans_len - 2].flag == 1 || ans[ans_len -1].flag == 1 )
+                {
+                    big_error = 1;
+                    break;
+                }
+                if (!add(ans+ans_len - 2,ans+ans_len - 1,steck[steck_len - 1]))
+                {
+                    big_error = 1;
+                    break;
+                }
+                //free(ans+ans_len-1);
+
+                ans_len--;
+                steck_len--;
+            }
+        }
+    }
 
     if (big_error || ans_len!=1 || ans == NULL || ans[0].flag!=0)
     {
