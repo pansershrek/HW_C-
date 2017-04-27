@@ -66,7 +66,9 @@ size_t add(vec *first,vec *second,char sign)
 
             }
         }
-       // free(second->koef);
+        free(second->koef);
+        second->koef = NULL;
+        second->len = 0;
         return 1;
     }
 }
@@ -111,6 +113,8 @@ int main(void)
             {
                 vec cchar;
                 cchar.koef = NULL;
+                cchar.len = 0;
+                cchar.num_val = 0;
                 while (steck_len > 0 && steck[steck_len -1]!='(')
                 {
                     cchar.flag = 2;
@@ -138,6 +142,8 @@ int main(void)
             if (ch == ')') {
                 vec cchar;
                 cchar.koef = NULL;
+                cchar.num_val = 0;
+                cchar.len = 0;
                 while (steck_len > 0 && steck[steck_len - 1] != '(')
                 {
                     cchar.flag = 2;
@@ -251,6 +257,8 @@ int main(void)
             if (ch >= '0' && ch <= '9')
         {
             vec numb;
+            numb.len = 0;
+            numb.oper = 0;
             numb.koef = NULL;
             numb.flag = 1;
             numb.num_val = (long long)(ch) - (long long)('0');
@@ -278,6 +286,7 @@ int main(void)
                 big_error = 1;
                 break;
             }
+            ans[ans_len - 1].oper = 0;
             ans[ans_len - 1].flag = 0;
             ans[ans_len - 1].len = 0;
             ans[ans_len - 1].koef = NULL;
@@ -416,7 +425,7 @@ int main(void)
         steck_len--;
     }
     free(steck);
-     // for (size_t i = 0; i < ans_len;i++)
+      //for (size_t i = 0; i < ans_len;i++)
      //   printf("%d ",ans[i].flag);
      // int test;
      //scanf("%d ",&test);
@@ -459,7 +468,7 @@ int main(void)
                     big_error = 1;
                     break;
                 }
-               //free(ans_steck[ans_steck_len - 1].koef);
+                //free(ans_steck[ans_steck_len - 1].koef);
                 ans_steck_len--;
             }
             else
@@ -512,14 +521,30 @@ int main(void)
     aans.num_val = ans_steck[0].num_val;
     aans.flag = ans_steck[0].flag;
     aans.koef = ans_steck[0].koef;
-    size_t fff = 0;
+
     if (big_error || ans_steck_len!=1 || ans_steck == NULL || ans_steck[0].flag!=0)
     {
         printf("[error]");
-        fff = 1;
+        for (size_t i = 0;i < ans_steck_len;i++)
+        {
+            if ( ((ans_steck+i) != NULL) && (ans_steck[i].koef != NULL))
+            {
+                long long *del = ans_steck[i].koef;
+                free(del);
+            }
+        }
+        free(ans);
+        free(ans_steck);
+        return 0;
     }
+    printf("{");
+    for (int i = 0;i < aans.len - 1;i++)
+    {
+        printf("%lld,",aans.koef[i]);
+    }
+    printf("%lld}",aans.koef[aans.len-1]);
 
-  /*  for (size_t i = 0;i < ans_steck_len;i++)
+    for (size_t i = 0;i < ans_steck_len;i++)
     {
         if ( ((ans_steck+i) != NULL) && (ans_steck[i].koef != NULL))
         {
@@ -527,27 +552,11 @@ int main(void)
             free(del);
         }
     }
-    for (size_t i = 0;i < ans_len;i++)
-    {
-        if ( ((ans + i) != NULL) && (ans[i].koef != NULL) )
-        {
-            long long *del = ans[i].koef;
-            free(del);
-        }
-
-    }*/
     //ans_steck = (struct vect *)realloc(ans_steck,0);
     //ans = (struct vect*) realloc(ans,0);
     free(ans);
     free(ans_steck);
-    if (fff)
-        return 0;
-    printf("{");
-    for (int i = 0;i < aans.len - 1;i++)
-    {
-        printf("%lld,",aans.koef[i]);
-    }
-    printf("%lld}",aans.koef[aans.len-1]);
+
 
 
 
