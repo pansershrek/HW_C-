@@ -7,6 +7,15 @@ struct vect{
     char oper;
 };
 typedef struct vect vec;
+size_t cmul(vec *fnumb,vec snumb)
+{
+    if (!fnumb)
+        return 0;
+    if (fnumb->flag != 2 || snumb.flag != 2)
+        return 0;
+    fnumb->num_val*=snumb.num_val;
+    return 1;
+}
 size_t mul(vec *first,vec numb)
 {
     if (!first)
@@ -80,7 +89,8 @@ int main(void)
         if (ch == ' ')
             continue;
         else
-        if (ch == '(' || ch == '-' || ch == '+' )
+            if (ch == '(' || ch == '*')
+       // if (ch == '(' || ch == '-' || ch == '+' || ch == '*' )
         {
             steck_len++;
             if (! (steck = (char*)realloc(steck,steck_len * sizeof(char))))
@@ -91,7 +101,7 @@ int main(void)
             steck[steck_len - 1]=ch;
         }
         else
-            if (ch == '*')
+            if ( ch == '-' || ch == '+')
             {
                 vec cchar;
                 while (steck_len > 0 && steck[steck_len -1]!='(')
@@ -394,6 +404,11 @@ int main(void)
         steck_len--;
     }
     free(steck);
+     // for (size_t i = 0; i < ans_len;i++)
+     //  printf("%d ",ans[i].flag);
+     //int test;
+     //scanf("%d ",&test);
+
     for (size_t i = 0; i < ans_len;i++)
     {
         if (ans[i].flag < 2)
@@ -431,11 +446,8 @@ int main(void)
             {
                 if (ans[i].oper == '*')
                 {
-                    if (ans_steck[ans_steck_len -2].flag + ans_steck[ans_steck_len -1].flag != 1)
+                    if (ans_steck[ans_steck_len -2].flag + ans_steck[ans_steck_len -1].flag == 1)
                     {
-                        big_error = 1;
-                        break;
-                    }
                     if (ans_steck[ans_steck_len -2].flag == 1)
                     {
                         ans_steck[ans_steck_len -1].flag = 1;
@@ -458,6 +470,17 @@ int main(void)
                     //free(ans + ans_len - 1);
                     ans_steck_len--;
                     //steck_len--;
+                }
+                    else
+                        if (ans_steck[ans_steck_len -2].flag == 2 && ans_steck[ans_steck_len -1].flag == 2)
+                        {
+                            if (!cmul(ans_steck + ans_steck_len - 2,ans_steck[ans_steck_len - 1]))
+                            {
+                                big_error = 1;
+                                break;
+                            }
+                            ans_steck_len--;
+                        }
                 }
             }
         }
