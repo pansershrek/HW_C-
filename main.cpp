@@ -413,37 +413,67 @@ int main(void)
                 big_error = 1;
                 break;
             }
-            if (ans_steck[ans_steck_len - 1].oper == '+' || ans_steck[ans_steck_len - 1].oper == '-')
+            if (ans[i].oper == '+' || ans[i].oper == '-')
             {
-                if (ans[ans_len - 2].flag == 1 || ans[ans_len -1].flag == 1 )
+                if (ans_steck[ans_steck_len - 2].flag != 0 || ans_steck[ans_steck_len -1].flag != 0 )
                 {
                     big_error = 1;
                     break;
                 }
-                if (!add(ans+ans_len - 2,ans+ans_len - 1,steck[steck_len - 1]))
+                if (!add(ans_steck+ans_steck_len - 2,ans_steck+ans_steck_len - 1,ans[i].oper))
                 {
                     big_error = 1;
                     break;
                 }
-                //free(ans+ans_len-1);
-
-                ans_len--;
-                steck_len--;
+                ans_steck_len--;
+            }
+            else
+            {
+                if (ans[i].oper == '*')
+                {
+                    if (ans_steck[ans_steck_len -2].flag + ans_steck[ans_steck_len -1].flag != 1)
+                    {
+                        big_error = 1;
+                        break;
+                    }
+                    if (ans_steck[ans_steck_len -2].flag == 1)
+                    {
+                        ans_steck[ans_steck_len -1].flag = 1;
+                        ans_steck[ans_steck_len -2].flag = 0;
+                        size_t qbuf = ans_steck[ans_steck_len -1].len;
+                        ans_steck[ans_steck_len - 1].len = ans_steck[ans_steck_len - 2].len;
+                        ans_steck[ans_steck_len - 2].len = qbuf;
+                        long long llbuf = ans_steck[ans_steck_len -1].num_val;
+                        ans_steck[ans_steck_len - 1].num_val = ans_steck[ans_steck_len - 2].num_val;
+                        ans_steck[ans_steck_len - 2].num_val = llbuf;
+                        long long *ptrbuff = ans_steck[ans_steck_len -1].koef;
+                        ans_steck[ans_steck_len - 1].koef = ans_steck[ans_steck_len - 2].koef;
+                        ans_steck[ans_steck_len - 2].koef = ptrbuff;
+                    }
+                    if (!mul(ans_steck + ans_steck_len - 2,ans_steck[ans_steck_len - 1]))
+                    {
+                        big_error = 1;
+                        break;
+                    }
+                    //free(ans + ans_len - 1);
+                    ans_steck_len--;
+                    //steck_len--;
+                }
             }
         }
     }
 
-    if (big_error || ans_len!=1 || ans == NULL || ans[0].flag!=0)
+    if (big_error || ans_steck_len!=1 || ans_steck == NULL || ans_steck[0].flag!=0)
     {
         printf("[error]");
         return 0;
     }
     printf("{");
-    for (int i = 0;i < ans[0].len - 1;i++)
+    for (int i = 0;i < ans_steck[0].len - 1;i++)
     {
-        printf("%lld,",ans[0].koef[i]);
+        printf("%lld,",ans_steck[0].koef[i]);
     }
-    printf("%lld}",ans[0].koef[ans[0].len-1]);
+    printf("%lld}",ans_steck[0].koef[ans_steck[0].len-1]);
 
 
 
